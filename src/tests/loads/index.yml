@@ -1,0 +1,26 @@
+config:
+  target: "http://localhost:3000/v1/auth"
+  processor: "./processor.js"
+  phases:
+    - duration: 30
+      arrivalRate: 10
+
+scenarios:
+  - name: user_register
+    flow:
+      - post:
+          url: "/register"
+          beforeRequest: generateUserData
+          json:
+            name: "{{ name }}"
+            email: "{{ email }}"
+            password: "{{ password }}"
+  - name: user_login
+    flow:
+      - post:
+          url: "/login"
+          json:
+            email: "random@email.com"
+            password: "randomPassword123"
+          expect:
+            - statusCode: 200
